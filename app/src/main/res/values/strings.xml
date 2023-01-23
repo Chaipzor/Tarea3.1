@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Tarea 3.1</string>
+    <string name="Record">Record</string>
+    <string name="Display">Display</string>
+    <string name="Logo">Logo</string>
+    <string name="Number">Number</string>
+    <string name="Previous">Previous</string>
+    <string name="Next">Next</string>
+</resources>
