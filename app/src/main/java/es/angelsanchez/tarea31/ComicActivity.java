@@ -21,7 +21,7 @@ public class ComicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comic);
-        cargarComic();
+        //cargarComic();
     }
 
     public void cargarComic(){

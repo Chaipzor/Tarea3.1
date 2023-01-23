@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 import es.angelsanchez.tarea31.db.ComicDatabase;
@@ -28,14 +27,13 @@ public class Inicio extends AppCompatActivity {
     XkcdService xkcdService;
     private Executor executor;
     boolean flag;
-    ComicCRUD listaComics = new ComicCRUD();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
         ComicDatabase db = new ComicDatabase(Inicio.this);
-        listaComics.setListaComics(db.retrieveComics());
+        //listaComics = db.retrieveComics();
 
         btnRecord = findViewById(R.id.btn_Record);
 
@@ -43,11 +41,8 @@ public class Inicio extends AppCompatActivity {
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Abrimos la nueva actividad y le pasamos el arrayList con todos los Comics.
-                Intent listaCms = new Intent(Inicio.this, ComicsAdapter.class);
-                //listaCms.putExtra("lista", listaComics);
-                listaCms.putExtra("lista", listaComics.getListaComics());
-                startActivity(listaCms);
+                Intent i = new Intent(Inicio.this, ComicsAdapter.class);
+                startActivity(i);
             }
         });
 
@@ -63,15 +58,13 @@ public class Inicio extends AppCompatActivity {
                 if (num < 0 || num > MAXCOMICS) {
                     Toast.makeText(Inicio.this, "Debe estar entre 0 y 2715", Toast.LENGTH_LONG).show();
                 } else {
-                    try {
-                        boolean existe = comprobarComic(num, db);
-                        if (existe) {
-                            Log.d("TAG", "Ya estaba en la bd");
-                        } else {
-                            //getPost(num, db);
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    Comic comic = new Comic();
+                    comic = db.existe(num);
+
+                    if (comic != null) {
+                        Log.d("TAG", "Ya estaba en la bd");
+                    } else {
+                        getPost(num, db);
                     }
 
                     Intent comicA = new Intent(Inicio.this, ComicActivity.class);
@@ -113,24 +106,6 @@ public class Inicio extends AppCompatActivity {
                 call.cancel();
             }
         });
-    }
-
-    public boolean comprobarComic(int num, ComicDatabase db) throws InterruptedException {
-        flag = false;
-        executor = ((MyApplication) getApplication()).diskIOExecutor;
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                //Añadimos a la BBDD los nuevos datos del comic seleccionado.
-                ArrayList<Comic> listado = listaComics.getListaComics();
-                for (Comic comic : listado) {
-                    if (comic.getId() == num) {
-                        flag = true;
-                    }
-                }
-            }
-        });
-        return flag;
     }
 
 }

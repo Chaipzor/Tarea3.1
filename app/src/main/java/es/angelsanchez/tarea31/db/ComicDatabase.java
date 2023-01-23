@@ -36,9 +36,7 @@ public class ComicDatabase {
         db.close();
     }
 
-
-
-    public Comic retrieveComic(int id){
+    public Comic existe(int id){
         SQLiteDatabase db = helper.getReadableDatabase();
         String[] args = {String.valueOf(id)};
         Cursor cursor = db.rawQuery("select * from " +  TABLE_DATOS + " where id = ?",args);

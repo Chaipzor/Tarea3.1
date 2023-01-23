@@ -17,13 +17,13 @@ public class ComicCRUD {
         this.listaComics.add(comic);
     }
 
-    public Comic leer(int id){
+    public boolean comprobar(int id){
         for(int i = 0; i<listaComics.size(); i++){
             if(listaComics.get(i).getId()==id){
-                return listaComics.get(i);
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     public ComicCRUD() {
