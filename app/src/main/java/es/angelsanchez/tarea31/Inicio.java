@@ -41,33 +41,38 @@ public class Inicio extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 EditText mEdit = findViewById(R.id.Number);
-                int id = Integer.parseInt(mEdit.getText().toString());
-                boolean exist = false;
-
-                //En caso de introducir un número negativo aparece un aviso
-                if (id < 0) {
-                    Toast.makeText(Inicio.this, "Debe ser un número mayor a 0", Toast.LENGTH_LONG).show();
+                String strUserName = mEdit.getText().toString();
+                int id = 0;
+                if (strUserName.isEmpty()) {
+                    Toast.makeText(Inicio.this, "No puede estar vacío ni ser negativo", Toast.LENGTH_LONG).show();
                 } else {
-                    Comic comic = new Comic();
+                    id = Integer.parseInt(mEdit.getText().toString());
 
-                    //Se comprueba si existe el id en la BBDD
-                    comic = db.existe(id);
+                    boolean exist = false;
 
-                    if (comic != null) {
-                        Log.d("TAG", "Ya estaba en la bd");
-                        exist = true;
+                    //En caso de introducir un número negativo aparece un aviso
+                    if (id < 0) {
+                        Toast.makeText(Inicio.this, "Debe ser un número mayor a 0", Toast.LENGTH_LONG).show();
                     } else {
+                        Comic comic = new Comic();
 
-                        //En caso de no existir en la BBDD se lee el JSON y se graba en BBDD
-                        //Este proceso tarda unos 40 segundos en hacerse...
-                        Post post = new Post();
-                        post.getPostBD(id, db);
+                        //Se comprueba si existe el id en la BBDD
+                        comic = db.existe(id);
+
+                        if (comic != null) {
+                            Log.d("TAG", "Ya estaba en la bd");
+                            Intent comicA = new Intent(Inicio.this, ComicActivity.class);
+                            comicA.putExtra("id", id);
+                            comicA.putExtra("exist", true);
+                            startActivity(comicA);
+                        } else {
+
+                            //En caso de no existir en la BBDD se lee el JSON y se graba en BBDD
+                            Post post = new Post();
+                            post.getPostBD(id, db, Inicio.this);
+                        }
                     }
-                    //Pasamos a la actividad ComicActivity el id y si existía en bbdd o no.
-                    Intent comicA = new Intent(Inicio.this, ComicActivity.class);
-                    comicA.putExtra("id", id);
-                    comicA.putExtra("exist", exist);
-                    startActivity(comicA);
+
                 }
             }
         });

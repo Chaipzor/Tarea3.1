@@ -17,8 +17,6 @@ public class ComicDatabase {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NOMBRE = "historial.db";
 
-    public ComicDatabase() {
-    }
     public ComicDatabase(Context context) {
         helper = new ComicDatabaseSQLiteOpenHelper(context, DATABASE_NOMBRE, null, DATABASE_VERSION);
     }
@@ -51,6 +49,7 @@ public class ComicDatabase {
         db.close();
     }
 
+    //Devuelve null si no existe el comic en BBDD, si existe devuelve el comic.
     public Comic existe(int id){
         SQLiteDatabase db = helper.getReadableDatabase();
         String[] args = {String.valueOf(id)};
@@ -77,6 +76,7 @@ public class ComicDatabase {
         db.close();
     }
 
+    //Devuelve un único comic
     public Comic retrieveComic(int id){
         SQLiteDatabase db = helper.getReadableDatabase();
         Comic comic = null;
@@ -98,6 +98,7 @@ public class ComicDatabase {
         return comic;
     }
 
+    //Devuelve un array de comics
     public ArrayList<Comic> retrieveComics(){
         SQLiteDatabase db = helper.getReadableDatabase();
         ArrayList<Comic> listaComics = new ArrayList<>();

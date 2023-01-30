@@ -39,14 +39,13 @@ public class ComicActivity extends AppCompatActivity {
 
         //Recibe si el comic existía (true) o no (false) en la bbdd
         boolean exist = getIntent().getExtras().getBoolean("exist");
-        if(exist){
+        if (exist) {
 
             //Carga los datos de la bbdd en la actividad según su id
             cargarComicBD(id);
-        } else{
+        } else {
 
-            //Carga los datos de la web en la actividad según su id ya que no puede mirar en la bbdd
-            //por el tiempo de carga que lleva esta.
+            //Carga los datos de la web en la actividad según su id
             cargarComicJson(id);
         }
         btn_Anterior = findViewById(R.id.btn_Anterior);
@@ -70,25 +69,21 @@ public class ComicActivity extends AppCompatActivity {
 
     }
 
-    public void mostrarComic(int id){
+    //Muestra el comic en pantalla
+    public void mostrarComic(int id) {
         Comic comic = new Comic();
         comic = db.existe(id);
-        Post post = new Post();
         if (comic != null) {
             Log.d("TAG", "Ya estaba en la bd: " + id);
             cargarComicBD(id);
         } else {
-            //Además de leerse el json nuevamente y mostrarse en pantalla.
-            comic = cargarComicJson(id);
-            //Si no existía se leerá el json y se grabará en bbdd.
-            if(comic!=null){
-                db.createComic(comic);
-            } else{
-                Log.d("TAG", "Ese nº de comic no existe: " + id);
-            }
+            //Si no existía en BBDD se leerá el json y se grabará en bbdd.
+            cargarYGrabar(id);
+
         }
     }
 
+    //Carga el comic desde la base de datos a los textviews
     public void cargarComicBD(int id) {
         TextView tvTitulo = findViewById(R.id.titulo);
         TextView tvFecha = findViewById(R.id.fecha);
@@ -122,14 +117,14 @@ public class ComicActivity extends AppCompatActivity {
                         }
                     });
                 } catch (NullPointerException e) {
-                    Log.d("TAG", "Ese nº de comic no existe, no existe todavía en bbdd");
-                    //Toast.makeText(ComicActivity.this, "Ese número de comic no existe", Toast.LENGTH_LONG).show();
+                    Log.d("TAG", "Ese nº de comic no existe todavía en bbdd");
                 }
             }
         });
     }
 
-    public Comic cargarComicJson(int id) {
+    //Carga el comic en los textviews directamente desde el JSON
+    public void cargarYGrabar(int id) {
         Comic comic = new Comic();
         TextView tvTitulo = findViewById(R.id.titulo);
         TextView tvFecha = findViewById(R.id.fecha);
@@ -149,7 +144,7 @@ public class ComicActivity extends AppCompatActivity {
 
                 Comic resource = response.body();
                 try {
-                    String titulo =  resource.getTitle();
+                    String titulo = resource.getTitle();
                     int dia = resource.getDay();
                     int mes = resource.getMonth();
                     int anyo = resource.getYear();
@@ -159,6 +154,8 @@ public class ComicActivity extends AppCompatActivity {
                     comic.setDay(dia);
                     comic.setMonth(mes);
                     comic.setYear(anyo);
+                    comic.setImg(img);
+                    db.createComic(comic);
                     Log.d("TAG", "titulo + " + titulo + "dia " + dia);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -177,7 +174,6 @@ public class ComicActivity extends AppCompatActivity {
 
                 } catch (NullPointerException e) {
                     Log.d("TAG", "Ese nº de comic no existe, no guarda en bbdd");
-                    //Toast.makeText(Inicio.this, "Ese número de comic no existe", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -186,7 +182,59 @@ public class ComicActivity extends AppCompatActivity {
                 call.cancel();
             }
         });
-        return comic;
+    }
+
+    public void cargarComicJson(int id) {
+        Comic comic = new Comic();
+        TextView tvTitulo = findViewById(R.id.titulo);
+        TextView tvFecha = findViewById(R.id.fecha);
+        ImageView imagen = findViewById(R.id.imagen);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://xkcd.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        xkcdService = retrofit.create(XkcdService.class);
+
+        Call<Comic> request = xkcdService.getComic(id);
+
+        request.enqueue(new Callback<Comic>() {
+            @Override
+            public void onResponse(Call<Comic> call, Response<Comic> response) {
+
+                Comic resource = response.body();
+                try {
+                    String titulo = resource.getTitle();
+                    int dia = resource.getDay();
+                    int mes = resource.getMonth();
+                    int anyo = resource.getYear();
+                    String img = resource.getImg();
+                    Log.d("TAG", "titulo + " + titulo + "dia " + dia);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvTitulo.setText("Título:" + titulo);
+                            tvFecha.setText("Fecha de publicación: " + dia + "/" + mes + "/" + anyo);
+                            Picasso.get().load(img)
+                                    .resize(300, 200)
+                                    .centerCrop()
+                                    .placeholder(R.drawable.progress_animation)
+                                    .error(R.drawable.comic_missing)
+                                    .noFade()
+                                    .into(imagen);
+                        }
+                    });
+
+                } catch (NullPointerException e) {
+                    Log.d("TAG", "Ese nº de comic no existe, no guarda en bbdd");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Comic> call, Throwable t) {
+                call.cancel();
+            }
+        });
     }
 
 }

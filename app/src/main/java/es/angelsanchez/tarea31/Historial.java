@@ -22,14 +22,10 @@ public class Historial extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial);
 
+        // Creamos el recyclerview
         rvlistaComics = findViewById(R.id.recyclerlistadoComics);
         rvlistaComics.setLayoutManager(new LinearLayoutManager(this));
 
-        // Lookup the recyclerview in activity layout
-        //RecyclerView rvContacts = (RecyclerView) findViewById(R.id.recyclerlistadoComics);
-        // Set layout manager to position the items
-        //rvContacts.setLayoutManager(new LinearLayoutManager(this));
-        // Create adapter passing in the sample user data
         ComicsAdapter adapter = new ComicsAdapter(new ComicsAdapter.OnUserClickListener() {
             @Override
             public void onUserClick(Comic comicClicked) {
@@ -40,10 +36,8 @@ public class Historial extends AppCompatActivity {
                 startActivity(comicA);
             }
         });
-        // Attach the adapter to the recyclerview to populate items
+        // Vinculamos el recycleview con el adaptador para pasarle los items.
         rvlistaComics.setAdapter(adapter);
-
-        // That's all!
 
         executor = ((MyApplication)getApplication()).diskIOExecutor;
         executor.execute(new Runnable() {

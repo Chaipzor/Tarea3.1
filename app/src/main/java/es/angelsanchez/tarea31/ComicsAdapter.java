@@ -12,15 +12,10 @@ import java.util.List;
 
 public class ComicsAdapter extends RecyclerView.Adapter<ViewHolder>  {
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
-
-
-    // Store a member variable for the contacts
     private List<Comic> listaComics;
     private final OnUserClickListener listener;
 
-    // Pass in the contact array into the constructor
+    // Pasamos el array de comics al constructor
     public ComicsAdapter(OnUserClickListener listener){
         this.listaComics = new ArrayList<>();
         this.listener = listener;
@@ -37,15 +32,16 @@ public class ComicsAdapter extends RecyclerView.Adapter<ViewHolder>  {
         return new ViewHolder(v);
     }
 
-    // Involves populating data into the item through holder
+    // Rellena la lista a través de los holders.
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // Get the data model based on position
         Comic comic = listaComics.get(position);
         String title = comic.getTitle();
         String id = String.valueOf(comic.getId());
-        String date = String.valueOf(comic.getDay()) + "/" + String.valueOf(comic.getMonth()) +
-                "/" + String.valueOf(comic.getYear());
+        String date = (comic.getDay()) + "/" + (comic.getMonth()) +
+                "/" + (comic.getYear());
+
         holder.tituloTextView.setText(title);
         holder.idTextView.setText(id);
         holder.fechaTextView.setText(date);
@@ -57,7 +53,7 @@ public class ComicsAdapter extends RecyclerView.Adapter<ViewHolder>  {
         });
     }
 
-    // Returns the total count of items in the list
+    // Devuelve el nº total de elementos de la lista
     @Override
     public int getItemCount() {
         return listaComics.size();
