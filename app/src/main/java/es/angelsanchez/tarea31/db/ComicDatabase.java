@@ -17,7 +17,8 @@ public class ComicDatabase {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NOMBRE = "historial.db";
 
-
+    public ComicDatabase() {
+    }
     public ComicDatabase(Context context) {
         helper = new ComicDatabaseSQLiteOpenHelper(context, DATABASE_NOMBRE, null, DATABASE_VERSION);
     }
@@ -31,6 +32,20 @@ public class ComicDatabase {
         values.put("day", day);
         values.put("month", month);
         values.put("year", year);
+
+        db.insert(TABLE_DATOS, null, values);
+        db.close();
+    }
+
+    public void createComic(Comic comic) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("id", comic.getId());
+        values.put("img", comic.getImg());
+        values.put("title", comic.getTitle());
+        values.put("day", comic.getDay());
+        values.put("month", comic.getMonth());
+        values.put("year", comic.getYear());
 
         db.insert(TABLE_DATOS, null, values);
         db.close();
@@ -62,16 +77,36 @@ public class ComicDatabase {
         db.close();
     }
 
+    public Comic retrieveComic(int id){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Comic comic = null;
+        Cursor cursorComics = null;
+
+        cursorComics = db.rawQuery("SELECT * FROM " + TABLE_DATOS + " Where id = " + id, null);
+        if (cursorComics.moveToFirst()) {
+            comic = new Comic();
+            comic.setId(cursorComics.getInt(0));
+            comic.setTitle(cursorComics.getString(1));
+            comic.setDay(cursorComics.getInt(2));
+            comic.setMonth(cursorComics.getInt(3));
+            comic.setYear(cursorComics.getInt(4));
+            comic.setImg(cursorComics.getString(5));
+        }
+
+        cursorComics.close();
+
+        return comic;
+    }
+
     public ArrayList<Comic> retrieveComics(){
         SQLiteDatabase db = helper.getReadableDatabase();
         ArrayList<Comic> listaComics = new ArrayList<>();
-        Comic comic = null;
         Cursor cursorComics = null;
 
         cursorComics = db.rawQuery("SELECT * FROM " + TABLE_DATOS, null);
         if (cursorComics.moveToFirst()) {
             do{
-                comic = new Comic();
+                Comic comic = new Comic();
                 comic.setId(cursorComics.getInt(0));
                 comic.setTitle(cursorComics.getString(1));
                 comic.setDay(cursorComics.getInt(2));
@@ -79,10 +114,11 @@ public class ComicDatabase {
                 comic.setYear(cursorComics.getInt(4));
                 comic.setImg(cursorComics.getString(5));
                 listaComics.add(comic);
-            }while(cursorComics.moveToNext());
+            } while(cursorComics.moveToNext());
         }
 
         cursorComics.close();
+        db.close();
 
         return listaComics;
     }

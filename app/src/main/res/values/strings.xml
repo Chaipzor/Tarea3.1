@@ -6,4 +6,6 @@
     <string name="Number">Number</string>
     <string name="Previous">Previous</string>
     <string name="Next">Next</string>
+    <string name="Downloading_Title">Downloading title...</string>
+    <string name="Downloading_Date">Downloading date...</string>
 </resources>

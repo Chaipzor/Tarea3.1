@@ -10,100 +10,65 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.concurrent.Executor;
-
 import es.angelsanchez.tarea31.db.ComicDatabase;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Inicio extends AppCompatActivity {
 
     Button btnVer;
     Button btnRecord;
-    final int MAXCOMICS = 2715;
-    XkcdService xkcdService;
-    private Executor executor;
-    boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
         ComicDatabase db = new ComicDatabase(Inicio.this);
-        //listaComics = db.retrieveComics();
 
+        // Al pulsar el botón "Record" nos lleva a la actividad "Historial"
         btnRecord = findViewById(R.id.btn_Record);
-
-        //Muestra el historial
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Inicio.this, ComicsAdapter.class);
+            public void onClick(View v) {
+                Intent i = new Intent(Inicio.this, Historial.class);
                 startActivity(i);
             }
         });
 
+        //Al pulsar el botón "Ver" guardará el número introducido en el textbox y abrirá ComicActivity
+        //Además guardará si el número existía en BBDD o no y también lo pasa a la nueva actividad
         btnVer = findViewById(R.id.btn_Ver);
         //Muestra el comic elegido
         btnVer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText mEdit = findViewById(R.id.Number);
-                int num = Integer.parseInt(mEdit.getText().toString());
+                int id = Integer.parseInt(mEdit.getText().toString());
+                boolean exist = false;
 
-                //Max. 2715
-                if (num < 0 || num > MAXCOMICS) {
-                    Toast.makeText(Inicio.this, "Debe estar entre 0 y 2715", Toast.LENGTH_LONG).show();
+                //En caso de introducir un número negativo aparece un aviso
+                if (id < 0) {
+                    Toast.makeText(Inicio.this, "Debe ser un número mayor a 0", Toast.LENGTH_LONG).show();
                 } else {
                     Comic comic = new Comic();
-                    comic = db.existe(num);
+
+                    //Se comprueba si existe el id en la BBDD
+                    comic = db.existe(id);
 
                     if (comic != null) {
                         Log.d("TAG", "Ya estaba en la bd");
+                        exist = true;
                     } else {
-                        getPost(num, db);
-                    }
 
+                        //En caso de no existir en la BBDD se lee el JSON y se graba en BBDD
+                        //Este proceso tarda unos 40 segundos en hacerse...
+                        Post post = new Post();
+                        post.getPostBD(id, db);
+                    }
+                    //Pasamos a la actividad ComicActivity el id y si existía en bbdd o no.
                     Intent comicA = new Intent(Inicio.this, ComicActivity.class);
-                    comicA.putExtra("id", num);
+                    comicA.putExtra("id", id);
+                    comicA.putExtra("exist", exist);
                     startActivity(comicA);
                 }
-            }
-        });
-    }
-
-    //Lee el json de la web
-    public void getPost(int num, ComicDatabase db) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://xkcd.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        xkcdService = retrofit.create(XkcdService.class);
-
-        Call<Comic> request = xkcdService.getComic(num);
-
-        request.enqueue(new Callback<Comic>() {
-            @Override
-            public void onResponse(Call<Comic> call, Response<Comic> response) {
-
-                Comic resource = response.body();
-                String title = (String) resource.getTitle();
-                int day = (Integer) resource.getDay();
-                int month = (Integer) resource.getMonth();
-                int year = (Integer) resource.getYear();
-                String img = (String) resource.getImg();
-                db.createComic(num, img, title, day, month, year);
-
-                Log.d("TAG", "titulo + " + title + "dia " + day);
-            }
-
-            @Override
-            public void onFailure(Call<Comic> call, Throwable t) {
-                call.cancel();
             }
         });
     }
