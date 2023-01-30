@@ -26,9 +26,9 @@ public class Historial extends AppCompatActivity {
         rvlistaComics.setLayoutManager(new LinearLayoutManager(this));
 
         // Lookup the recyclerview in activity layout
-        RecyclerView rvContacts = (RecyclerView) findViewById(R.id.recyclerlistadoComics);
+        //RecyclerView rvContacts = (RecyclerView) findViewById(R.id.recyclerlistadoComics);
         // Set layout manager to position the items
-        rvContacts.setLayoutManager(new LinearLayoutManager(this));
+        //rvContacts.setLayoutManager(new LinearLayoutManager(this));
         // Create adapter passing in the sample user data
         ComicsAdapter adapter = new ComicsAdapter(new ComicsAdapter.OnUserClickListener() {
             @Override
@@ -41,7 +41,7 @@ public class Historial extends AppCompatActivity {
             }
         });
         // Attach the adapter to the recyclerview to populate items
-        rvContacts.setAdapter(adapter);
+        rvlistaComics.setAdapter(adapter);
 
         // That's all!
 
@@ -54,7 +54,7 @@ public class Historial extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setTitle("Total comics visualizados: " + listaComics.size());
+                        setTitle("Comics almacenados: " + listaComics.size());
                         adapter.updateComics(listaComics);
                         adapter.notifyDataSetChanged();
                     }

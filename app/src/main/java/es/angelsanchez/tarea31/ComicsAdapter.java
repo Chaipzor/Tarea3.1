@@ -42,8 +42,13 @@ public class ComicsAdapter extends RecyclerView.Adapter<ViewHolder>  {
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // Get the data model based on position
         Comic comic = listaComics.get(position);
-        holder.tituloTextView.setText("Título: " + comic.getTitle());
-        holder.idTextView.setText(" Id: " + comic.getId());
+        String title = comic.getTitle();
+        String id = String.valueOf(comic.getId());
+        String date = String.valueOf(comic.getDay()) + "/" + String.valueOf(comic.getMonth()) +
+                "/" + String.valueOf(comic.getYear());
+        holder.tituloTextView.setText(title);
+        holder.idTextView.setText(id);
+        holder.fechaTextView.setText(date);
         holder.tituloTextView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
