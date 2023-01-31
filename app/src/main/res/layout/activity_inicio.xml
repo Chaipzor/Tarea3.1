@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F7F7"
     tools:context=".Inicio">
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="302dp"
-        android:layout_height="264dp"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_250sdp"
         android:layout_marginTop="36dp"
         android:contentDescription="@string/Logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Record"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,29 +34,30 @@
         android:id="@+id/btn_Ver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="32dp"
         android:text="@string/Display"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:layout_constraintVertical_bias="0.493" />
+        app:layout_constraintVertical_bias="0.247" />
 
     <EditText
         android:id="@+id/Number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_160sdp"
+        android:layout_height="@dimen/_30sdp"
         android:ems="10"
         android:hint="@string/Number"
         android:inputType="number"
-        android:minHeight="48dp"
         android:textAlignment="center"
         android:textColorHint="#78909C"
+        android:textSize="@dimen/_10sdp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_Ver"
-        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintHorizontal_bias="0.355"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:layout_constraintVertical_bias="0.497" />
+        app:layout_constraintVertical_bias="0.247" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

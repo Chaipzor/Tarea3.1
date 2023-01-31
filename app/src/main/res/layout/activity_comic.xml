@@ -7,14 +7,14 @@
     tools:context=".ComicActivity">
 
 
-
     <TextView
         android:id="@+id/titulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="@string/Downloading_Title"
-        android:textSize="20sp"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="112dp"
         android:text="@string/Downloading_Date"
-        android:textSize="20sp"
+        android:textSize="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,19 +37,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Previous"
+        android:textSize="@dimen/_20sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_Siguiente"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_Siguiente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="72dp"
         android:text="@string/Next"
+        android:textSize="@dimen/_20sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_Anterior" />
 
     <RelativeLayout
         android:id="@+id/myContainer"
@@ -62,8 +65,8 @@
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/imagen"
-            android:layout_width="250dp"
-            android:layout_height="350dp"
+            android:layout_width="@dimen/_250sdp"
+            android:layout_height="@dimen/_250sdp"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
