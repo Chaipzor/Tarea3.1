@@ -50,19 +50,19 @@ public class ComicDatabase {
     }
 
     //Devuelve null si no existe el comic en BBDD, si existe devuelve el comic.
-    public Comic existe(int id){
+    public Comic existe(int id) {
         SQLiteDatabase db = helper.getReadableDatabase();
         String[] args = {String.valueOf(id)};
-        Cursor cursor = db.rawQuery("select * from " +  TABLE_DATOS + " where id = ?",args);
+        Cursor cursor = db.rawQuery("select * from " + TABLE_DATOS + " where id = ?", args);
         Comic comic = null;
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             comic = new Comic(id, cursor.getString(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4));
         }
         db.close();
         return comic;
     }
 
-    public void updateComic(int id, String img, String title, int day, int month, int year){
+    public void updateComic(int id, String img, String title, int day, int month, int year) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         String[] args = {String.valueOf(id)};
@@ -72,12 +72,12 @@ public class ComicDatabase {
         values.put("day", day);
         values.put("month", month);
         values.put("year", year);
-        db.update(TABLE_DATOS, values,"identifier = ?",args);
+        db.update(TABLE_DATOS, values, "identifier = ?", args);
         db.close();
     }
 
     //Devuelve un único comic
-    public Comic retrieveComic(int id){
+    public Comic retrieveComic(int id) {
         SQLiteDatabase db = helper.getReadableDatabase();
         Comic comic = null;
         Cursor cursorComics = null;
@@ -99,14 +99,14 @@ public class ComicDatabase {
     }
 
     //Devuelve un array de comics
-    public ArrayList<Comic> retrieveComics(){
+    public ArrayList<Comic> retrieveComics() {
         SQLiteDatabase db = helper.getReadableDatabase();
         ArrayList<Comic> listaComics = new ArrayList<>();
         Cursor cursorComics = null;
 
         cursorComics = db.rawQuery("SELECT * FROM " + TABLE_DATOS, null);
         if (cursorComics.moveToFirst()) {
-            do{
+            do {
                 Comic comic = new Comic();
                 comic.setId(cursorComics.getInt(0));
                 comic.setTitle(cursorComics.getString(1));
@@ -115,7 +115,7 @@ public class ComicDatabase {
                 comic.setYear(cursorComics.getInt(4));
                 comic.setImg(cursorComics.getString(5));
                 listaComics.add(comic);
-            } while(cursorComics.moveToNext());
+            } while (cursorComics.moveToNext());
         }
 
         cursorComics.close();

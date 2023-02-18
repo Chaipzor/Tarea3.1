@@ -9,4 +9,9 @@
     <string name="Next">Siguiente</string>
     <string name="Downloading_Date">Descargando fecha...</string>
     <string name="Downloading_Title">Descargando título...</string>
+    <string name="Comic">Imagen del comic</string>
+    <string name="Icon">Icono</string>
+    <string name="Title">Título</string>
+    <string name="Date">Fecha</string>
+    <string name="Id">Id</string>
 </resources>
